@@ -4,6 +4,7 @@ import {
   createTodo,
   deriveTodoCounts,
   toggleTodoStatus,
+  toggleTodoStatusById,
   updateTodo,
   updateTodoById,
   validateTodoTitle,
@@ -110,5 +111,28 @@ describe('todo helpers', () => {
       completed: 1,
       pending: 1,
     });
+  });
+
+  it('toggles a matching todo by id without changing other items', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-01-05T06:07:08.000Z'));
+
+    const otherTodo: Todo = {
+      ...existingTodo,
+      id: 'todo-2',
+      title: 'Keep pending task',
+    };
+    const updatedTodos = toggleTodoStatusById(
+      [existingTodo, otherTodo],
+      existingTodo.id,
+    );
+
+    expect(updatedTodos).toHaveLength(2);
+    expect(updatedTodos[0]).toMatchObject({
+      ...existingTodo,
+      completed: true,
+      updatedAt: '2026-01-05T06:07:08.000Z',
+    });
+    expect(updatedTodos[1]).toBe(otherTodo);
   });
 });
