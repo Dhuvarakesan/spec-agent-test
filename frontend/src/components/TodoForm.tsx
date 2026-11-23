@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useRef, useState, type FormEvent } from 'react';
 
 import {
   TODO_TITLE_REQUIRED_MESSAGE,
@@ -15,6 +15,7 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
   const errorId = useId();
   const helperId = useId();
   const titleId = useId();
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
   const [titleError, setTitleError] = useState('');
@@ -24,6 +25,7 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
 
     if (!validateTodoTitle(title)) {
       setTitleError(TODO_TITLE_REQUIRED_MESSAGE);
+      titleInputRef.current?.focus();
       return;
     }
 
@@ -45,14 +47,15 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
         </p>
       </div>
 
-      <label className="form-field" htmlFor={titleId}>
-        <span>Title</span>
+      <div className="form-field">
+        <label htmlFor={titleId}>Title</label>
         <input
           aria-describedby={titleError ? errorId : helperId}
           aria-invalid={titleError ? 'true' : 'false'}
           id={titleId}
           name="title"
           placeholder="Plan the next useful step"
+          ref={titleInputRef}
           type="text"
           value={title}
           onChange={(event) => {
@@ -63,12 +66,17 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
             }
           }}
         />
-      </label>
+        {titleError ? (
+          <span className="field-error" id={errorId}>
+            {titleError}
+          </span>
+        ) : null}
+      </div>
 
-      <label className="form-field" htmlFor={descriptionId}>
-        <span>
+      <div className="form-field">
+        <label htmlFor={descriptionId}>
           Description <span className="optional-label">Optional</span>
-        </span>
+        </label>
         <textarea
           id={descriptionId}
           name="description"
@@ -77,11 +85,11 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
           value={description}
           onChange={(event) => setDescription(event.target.value)}
         />
-      </label>
+      </div>
 
       <div className="validation-panel" aria-live="polite">
         {titleError ? (
-          <p className="validation-message" id={errorId}>
+          <p className="validation-message validation-message-error">
             {titleError}
           </p>
         ) : (

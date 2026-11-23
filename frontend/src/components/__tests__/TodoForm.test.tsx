@@ -52,10 +52,13 @@ describe('TodoForm', () => {
   it('shows validation instead of submitting an empty title', async () => {
     const user = userEvent.setup();
     const onSubmit = renderTodoForm();
+    const titleInput = screen.getByLabelText('Title');
 
     await user.click(screen.getByRole('button', { name: 'Save task' }));
 
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(screen.getByText('Todo title is required.')).toBeInTheDocument();
+    expect(screen.getAllByText('Enter a task title before saving')).toHaveLength(2);
+    expect(titleInput).toHaveAttribute('aria-invalid', 'true');
+    expect(titleInput).toHaveFocus();
   });
 });
