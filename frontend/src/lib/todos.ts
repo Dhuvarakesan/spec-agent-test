@@ -92,6 +92,12 @@ export function toggleTodoStatus(todo: Todo): Todo {
   };
 }
 
+export function toggleTodoStatusById(todos: Todo[], todoId: string): Todo[] {
+  return todos.map((todo) => (
+    todo.id === todoId ? toggleTodoStatus(todo) : todo
+  ));
+}
+
 export function deriveTodoCounts(todos: Todo[]): TodoCounts {
   const completed = todos.filter((todo) => todo.completed).length;
   const total = todos.length;

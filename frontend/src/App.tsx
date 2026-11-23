@@ -6,7 +6,7 @@ import TodoList from './components/TodoList';
 import {
   createTodo,
   deriveTodoCounts,
-  toggleTodoStatus,
+  toggleTodoStatusById,
   updateTodoById,
   type Todo,
   type TodoDraft,
@@ -179,9 +179,7 @@ export default function App() {
 
   function handleToggleTodoStatus(todoId: string) {
     setTodos((currentTodos) => (
-      currentTodos.map((todo) => (
-        todo.id === todoId ? toggleTodoStatus(todo) : todo
-      ))
+      toggleTodoStatusById(currentTodos, todoId)
     ));
   }
 
