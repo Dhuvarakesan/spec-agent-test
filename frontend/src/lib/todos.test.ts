@@ -41,7 +41,8 @@ describe('todo helpers', () => {
   });
 
   it('rejects empty todo titles', () => {
-    expect(() => createTodo({ title: ' ' })).toThrow('Todo title is required.');
+    expect(() => createTodo({ title: ' ' }))
+      .toThrow('Enter a task title before saving');
   });
 
   it('updates provided fields while preserving omitted values', () => {

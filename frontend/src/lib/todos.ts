@@ -18,7 +18,7 @@ export interface TodoCounts {
   pending: number;
 }
 
-export const TODO_TITLE_REQUIRED_MESSAGE = 'Todo title is required.';
+export const TODO_TITLE_REQUIRED_MESSAGE = 'Enter a task title before saving';
 
 export function createTodoId(): string {
   if (
