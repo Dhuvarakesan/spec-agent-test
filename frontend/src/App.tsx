@@ -2,9 +2,11 @@ import { useState } from 'react';
 
 import './App.css';
 import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 import {
   createTodo,
   deriveTodoCounts,
+  toggleTodoStatus,
   updateTodoById,
   type Todo,
   type TodoDraft,
@@ -99,55 +101,6 @@ function TaskFormScreen({
   );
 }
 
-interface TaskListScreenProps {
-  todos: Todo[];
-  onEditTodo: (todoId: string) => void;
-}
-
-function TaskListScreen({ todos, onEditTodo }: TaskListScreenProps) {
-  return (
-    <section className="card" aria-labelledby="task-list-title">
-      <div className="section-heading">
-        <div>
-          <p className="eyebrow">Browse</p>
-          <h1 id="task-list-title">Task list</h1>
-        </div>
-        <span className="tag">{todos.length} items</span>
-      </div>
-
-      <div className="task-list">
-        {todos.length > 0 ? (
-          todos.map((todo) => (
-            <article className="task-card" key={todo.id}>
-              <div>
-                <h2>{todo.title}</h2>
-                <p>{todo.description || 'No description added.'}</p>
-              </div>
-              <div className="task-actions">
-                <span className={todo.completed ? 'tag tag-success' : 'tag'}>
-                  {todo.completed ? 'Done' : 'Pending'}
-                </span>
-                <button
-                  className="button button-secondary button-small"
-                  type="button"
-                  onClick={() => onEditTodo(todo.id)}
-                >
-                  Edit
-                </button>
-              </div>
-            </article>
-          ))
-        ) : (
-          <div className="empty-state">
-            <h2>No tasks yet</h2>
-            <p>New todos will appear here after task creation is implemented.</p>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
-
 function StorageScreen() {
   return (
     <section className="card" aria-labelledby="storage-title">
@@ -195,6 +148,35 @@ export default function App() {
   function handleEditTodo(todoId: string) {
     setEditedTodoId(todoId);
     setActiveScreen('form');
+  }
+
+  function handleCreateTask() {
+    setEditedTodoId(null);
+    setActiveScreen('form');
+  }
+
+  function handleDeleteTodo(todoId: string) {
+    const shouldDelete = window.confirm('Delete this task?');
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setTodos((currentTodos) => (
+      currentTodos.filter((todo) => todo.id !== todoId)
+    ));
+
+    if (editedTodoId === todoId) {
+      setEditedTodoId(null);
+    }
+  }
+
+  function handleToggleTodoStatus(todoId: string) {
+    setTodos((currentTodos) => (
+      currentTodos.map((todo) => (
+        todo.id === todoId ? toggleTodoStatus(todo) : todo
+      ))
+    ));
   }
 
   function handleSetActiveScreen(screen: ShellScreen) {
@@ -269,7 +251,13 @@ export default function App() {
             />
           )}
           {activeScreen === 'tasks' && (
-            <TaskListScreen todos={todos} onEditTodo={handleEditTodo} />
+            <TodoList
+              todos={todos}
+              onCreateTask={handleCreateTask}
+              onDeleteTodo={handleDeleteTodo}
+              onEditTodo={handleEditTodo}
+              onToggleTodoStatus={handleToggleTodoStatus}
+            />
           )}
           {activeScreen === 'storage' && <StorageScreen />}
         </main>
