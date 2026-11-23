@@ -168,13 +168,12 @@ export default function App() {
       return;
     }
 
+    setEditedTodoId((currentEditedTodoId) => (
+      currentEditedTodoId === todoId ? null : currentEditedTodoId
+    ));
     setTodos((currentTodos) => (
       currentTodos.filter((todo) => todo.id !== todoId)
     ));
-
-    if (editedTodoId === todoId) {
-      setEditedTodoId(null);
-    }
   }
 
   function handleToggleTodoStatus(todoId: string) {
