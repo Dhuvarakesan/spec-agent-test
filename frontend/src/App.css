@@ -258,6 +258,16 @@ h2 {
   background: var(--color-surface);
 }
 
+.button-secondary:hover {
+  border-color: #bdd5e9;
+  background: #f8fbff;
+}
+
+.button-small {
+  min-height: 36px;
+  padding: 0 12px;
+}
+
 .tag {
   display: inline-flex;
   min-height: 28px;
@@ -421,6 +431,15 @@ h2 {
   line-height: 1.55;
 }
 
+.task-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .empty-state {
   padding: 28px;
   border: 1px dashed #b8c5d6;
@@ -507,6 +526,10 @@ h2 {
   .task-card,
   .section-heading {
     flex-direction: column;
+  }
+
+  .task-actions {
+    justify-content: flex-start;
   }
 
   .storage-list div {

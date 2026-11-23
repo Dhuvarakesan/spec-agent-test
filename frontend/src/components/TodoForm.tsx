@@ -3,21 +3,29 @@ import { useId, useRef, useState, type FormEvent } from 'react';
 import {
   TODO_TITLE_REQUIRED_MESSAGE,
   validateTodoTitle,
+  type Todo,
   type TodoDraft,
 } from '../lib/todos';
 
 interface TodoFormProps {
+  todo?: Todo;
+  onCancelEdit?: () => void;
   onSubmit: (draft: TodoDraft) => void;
 }
 
-export default function TodoForm({ onSubmit }: TodoFormProps) {
+export default function TodoForm({
+  todo,
+  onCancelEdit,
+  onSubmit,
+}: TodoFormProps) {
   const descriptionId = useId();
   const errorId = useId();
   const helperId = useId();
   const titleId = useId();
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const [description, setDescription] = useState('');
-  const [title, setTitle] = useState('');
+  const isEditing = todo !== undefined;
+  const [description, setDescription] = useState(todo?.description ?? '');
+  const [title, setTitle] = useState(todo?.title ?? '');
   const [titleError, setTitleError] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -41,9 +49,11 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
   return (
     <form className="form-grid" onSubmit={handleSubmit}>
       <div className="form-header">
-        <span className="tag">Create todo</span>
+        <span className="tag">{isEditing ? 'Edit todo' : 'Create todo'}</span>
         <p className="form-helper" id={helperId}>
-          Add a required title and an optional description.
+          {isEditing
+            ? 'Update the selected task title or description.'
+            : 'Add a required title and an optional description.'}
         </p>
       </div>
 
@@ -101,8 +111,17 @@ export default function TodoForm({ onSubmit }: TodoFormProps) {
 
       <div className="form-actions">
         <button className="button button-primary" type="submit">
-          Save task
+          {isEditing ? 'Update task' : 'Save task'}
         </button>
+        {isEditing ? (
+          <button
+            className="button button-secondary"
+            type="button"
+            onClick={onCancelEdit}
+          >
+            Cancel edit
+          </button>
+        ) : null}
       </div>
     </form>
   );

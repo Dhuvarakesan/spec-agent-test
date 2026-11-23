@@ -74,6 +74,16 @@ export function updateTodo(todo: Todo, draft: Partial<TodoDraft>): Todo {
   };
 }
 
+export function updateTodoById(
+  todos: Todo[],
+  todoId: string,
+  draft: TodoDraft,
+): Todo[] {
+  return todos.map((todo) => (
+    todo.id === todoId ? updateTodo(todo, draft) : todo
+  ));
+}
+
 export function toggleTodoStatus(todo: Todo): Todo {
   return {
     ...todo,
