@@ -45,7 +45,7 @@ describe('App shell', () => {
     await user.click(screen.getByRole('button', { name: 'Task form' }));
     expect(screen.getByLabelText('Title')).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Add task' }),
+      screen.getByRole('button', { name: 'Save task' }),
     ).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Local storage' }));
@@ -53,5 +53,30 @@ describe('App shell', () => {
       screen.getByRole('heading', { name: 'Local storage labels' }),
     ).toBeInTheDocument();
     expect(screen.getByText('simple-todo.tasks')).toBeInTheDocument();
+  });
+
+  it('creates a pending task and displays its description', async () => {
+    const user = userEvent.setup();
+
+    renderApp();
+
+    await user.click(screen.getByRole('button', { name: 'Task form' }));
+    await user.type(screen.getByLabelText('Title'), 'Prepare demo');
+    await user.type(
+      screen.getByLabelText(/Description/),
+      'Show the created pending task.',
+    );
+    await user.click(screen.getByRole('button', { name: 'Save task' }));
+
+    expect(screen.getByLabelText('Title')).toHaveValue('');
+    expect(screen.getByLabelText(/Description/)).toHaveValue('');
+
+    await user.click(screen.getByRole('button', { name: 'Task list' }));
+
+    expect(screen.getByRole('heading', { name: 'Prepare demo' }))
+      .toBeInTheDocument();
+    expect(screen.getByText('Show the created pending task.'))
+      .toBeInTheDocument();
+    expect(screen.getAllByText('Pending')).toHaveLength(2);
   });
 });
