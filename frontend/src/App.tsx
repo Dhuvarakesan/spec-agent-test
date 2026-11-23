@@ -156,7 +156,13 @@ export default function App() {
   }
 
   function handleDeleteTodo(todoId: string) {
-    const shouldDelete = window.confirm('Delete this task?');
+    const todoToDelete = todos.find((todo) => todo.id === todoId);
+
+    if (!todoToDelete) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(`Delete "${todoToDelete.title}"?`);
 
     if (!shouldDelete) {
       return;
