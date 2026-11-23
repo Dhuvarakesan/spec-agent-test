@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import './App.css';
+import { createTodo, deriveTodoCounts, type Todo } from './lib/todos';
 
 type ShellView = 'Dashboard' | 'New Todo' | 'Tasks' | 'Storage';
 
@@ -13,8 +14,17 @@ const viewSummaries: Record<ShellView, string> = {
   Storage: 'A local-first area reserved for browser storage details.',
 };
 
+const initialTodos: Todo[] = [
+  createTodo({
+    title: 'Capture the first todo',
+    description: 'Use the shared todo helpers as the domain foundation.',
+  }),
+];
+
 function App() {
   const [activeView, setActiveView] = useState<ShellView>('Dashboard');
+  const [todos] = useState<Todo[]>(initialTodos);
+  const todoCounts = deriveTodoCounts(todos);
 
   return (
     <div className="app-shell">
@@ -59,6 +69,13 @@ function App() {
               <p className="card-label">Current view</p>
               <h2>{activeView}</h2>
               <p>{viewSummaries[activeView]}</p>
+            </article>
+            <article className="summary-card">
+              <p className="card-label">Todo counts</p>
+              <h2>{todoCounts.total} total</h2>
+              <p>
+                {todoCounts.completed} completed and {todoCounts.pending} pending.
+              </p>
             </article>
             <article className="summary-card notice-card">
               <p className="card-label">Status</p>
