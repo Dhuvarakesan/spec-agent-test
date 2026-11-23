@@ -258,6 +258,16 @@ h2 {
   background: var(--color-surface);
 }
 
+.button-secondary:hover {
+  border-color: #bdd5e9;
+  background: #f8fbff;
+}
+
+.button-small {
+  min-height: 36px;
+  padding: 0 12px;
+}
+
 .tag {
   display: inline-flex;
   min-height: 28px;
@@ -312,11 +322,28 @@ h2 {
   gap: 16px;
 }
 
+.form-header {
+  display: grid;
+  gap: 10px;
+}
+
+.form-helper {
+  margin-bottom: 0;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
 .form-field {
   display: grid;
   gap: 8px;
   color: var(--color-text);
   font-weight: 800;
+}
+
+.optional-label {
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .form-field input,
@@ -337,6 +364,35 @@ h2 {
   min-height: 118px;
   padding: 12px;
   resize: vertical;
+}
+
+.form-field input[aria-invalid="true"] {
+  border-color: #b91c1c;
+}
+
+.field-error {
+  color: #b91c1c;
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.validation-panel {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fbfcfe;
+}
+
+.validation-message {
+  margin-bottom: 0;
+  color: var(--color-muted);
+  line-height: 1.45;
+}
+
+.validation-message-error {
+  color: #b91c1c;
+  font-weight: 800;
 }
 
 .form-actions {
@@ -373,6 +429,15 @@ h2 {
   margin-bottom: 0;
   color: var(--color-muted);
   line-height: 1.55;
+}
+
+.task-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .empty-state {
@@ -461,6 +526,10 @@ h2 {
   .task-card,
   .section-heading {
     flex-direction: column;
+  }
+
+  .task-actions {
+    justify-content: flex-start;
   }
 
   .storage-list div {

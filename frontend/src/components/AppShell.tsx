@@ -1,6 +1,12 @@
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
 
-import { createTodo, deriveTodoCounts, type Todo } from '../lib/todos';
+import {
+  createTodo,
+  deriveTodoCounts,
+  type Todo,
+  type TodoDraft,
+} from '../lib/todos';
+import TodoForm from './TodoForm';
 
 type ShellScreen = 'dashboard' | 'form' | 'tasks' | 'storage';
 
@@ -29,10 +35,6 @@ const sampleTodos: Todo[] = [
     completed: true,
   },
 ];
-
-function handleTaskFormSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
-}
 
 function DashboardScreen({ todos }: { todos: Todo[] }) {
   const todoCounts = deriveTodoCounts(todos);
@@ -66,44 +68,21 @@ function DashboardScreen({ todos }: { todos: Todo[] }) {
   );
 }
 
-function TaskFormScreen() {
+interface TaskFormScreenProps {
+  onCreateTodo: (todo: Todo) => void;
+}
+
+function TaskFormScreen({ onCreateTodo }: TaskFormScreenProps) {
+  function handleCreateTodo(draft: TodoDraft) {
+    onCreateTodo(createTodo(draft));
+  }
+
   return (
     <section className="card" aria-labelledby="task-form-title">
       <p className="eyebrow">Create</p>
       <h1 id="task-form-title">Task form</h1>
-      <p className="notice">
-        Form behavior is reserved for the todo interaction task. The controls
-        below establish the accessible shell structure.
-      </p>
 
-      <form className="form-grid" onSubmit={handleTaskFormSubmit}>
-        <label className="form-field" htmlFor="todo-title">
-          <span>Title</span>
-          <input
-            id="todo-title"
-            name="title"
-            placeholder="Plan the next useful step"
-            type="text"
-          />
-        </label>
-        <label className="form-field" htmlFor="todo-description">
-          <span>Description</span>
-          <textarea
-            id="todo-description"
-            name="description"
-            placeholder="Add a short note"
-            rows={4}
-          />
-        </label>
-        <div className="form-actions">
-          <button className="button button-primary" type="submit">
-            Add task
-          </button>
-          <button className="button button-secondary" type="button">
-            Clear
-          </button>
-        </div>
-      </form>
+      <TodoForm onSubmit={handleCreateTodo} />
     </section>
   );
 }
@@ -179,7 +158,11 @@ function getScreenTitle(screen: ShellScreen): string {
 
 export default function AppShell() {
   const [activeScreen, setActiveScreen] = useState<ShellScreen>('dashboard');
-  const [todos] = useState<Todo[]>(sampleTodos);
+  const [todos, setTodos] = useState<Todo[]>(sampleTodos);
+
+  function handleCreateTodo(todo: Todo) {
+    setTodos((currentTodos) => [todo, ...currentTodos]);
+  }
 
   return (
     <div className="app-shell">
@@ -225,7 +208,9 @@ export default function AppShell() {
           aria-label={getScreenTitle(activeScreen)}
         >
           {activeScreen === 'dashboard' && <DashboardScreen todos={todos} />}
-          {activeScreen === 'form' && <TaskFormScreen />}
+          {activeScreen === 'form' && (
+            <TaskFormScreen onCreateTodo={handleCreateTodo} />
+          )}
           {activeScreen === 'tasks' && <TaskListScreen todos={todos} />}
           {activeScreen === 'storage' && <StorageScreen />}
         </main>
