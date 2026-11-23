@@ -18,6 +18,8 @@ export interface TodoCounts {
   pending: number;
 }
 
+export const TODO_TITLE_REQUIRED_MESSAGE = 'Todo title is required.';
+
 export function createTodoId(): string {
   if (
     typeof crypto !== 'undefined'
@@ -40,7 +42,7 @@ export function createTodo(draft: TodoDraft): Todo {
   const title = draft.title.trim();
 
   if (!validateTodoTitle(title)) {
-    throw new Error('Todo title is required.');
+    throw new Error(TODO_TITLE_REQUIRED_MESSAGE);
   }
 
   const now = new Date().toISOString();
@@ -59,7 +61,7 @@ export function updateTodo(todo: Todo, draft: Partial<TodoDraft>): Todo {
   const title = draft.title === undefined ? todo.title : draft.title.trim();
 
   if (!validateTodoTitle(title)) {
-    throw new Error('Todo title is required.');
+    throw new Error(TODO_TITLE_REQUIRED_MESSAGE);
   }
 
   return {

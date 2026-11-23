@@ -1,8 +1,6 @@
 import './App.css';
 import AppShell from './components/AppShell';
 
-function App() {
+export default function App() {
   return <AppShell />;
 }
-
-export default App;
